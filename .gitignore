@@ -1,0 +1,14 @@
+# Include your project-specific ignores in this file
+# Read about how to use .gitignore: https://help.github.com/articles/ignoring-files
+
+.idea/compiler.xml
+.idea/copyright/
+.idea/misc.xml
+.idea/modules.xml
+.idea/workspace.xml
+.idea/jsLibraryMappings.xml
+.idea/vcs.xml
+.idea/dictionaries/tina.xml
+.idea/
+
+
