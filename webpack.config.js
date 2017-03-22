@@ -1,42 +1,42 @@
+var path = require('path');
 var webpack = require('webpack');
-var uglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
-
-// 开发环境标识
-var devFlagPlugin = new webpack.DefinePlugin({
-    __DEV__: JSON.stringify(JSON.parse(process.env.DEBUG || 'false'))
-});
+var sassLoader = 'style!css?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]!sass?sourceMap=true&sourceMapContents=true';
 
 module.exports = {
+    devtool: 'cheap-module-eval-source-map',
     entry: [
-        'webpack/hot/dev-server',
-        'webpack-dev-server/client?http://localhost:8080',
-        './main.js'
+        'webpack-hot-middleware/client',
+        './js/app.js',
     ],
     output: {
-        path: __dirname + '/assets/',
-        publicPath: "/assets/",
+        path: path.resolve(__dirname, 'build'),
         filename: 'bundle.js',
-        chunkFilename: '[name].[chunkhash:5].chunk.js'
+        publicPath: '/static/',
     },
     module: {
-        loaders: [
-            {test: /\.css$/, loader: 'style-loader!css-loader?modules'},
+        loaders: [{
+            test: /\.jsx?$/,
+            include: [
+                path.resolve(__dirname, 'js'),
+            ],
+            loaders: ['react-hot', 'babel'],
+        },
             {
-                test: /\.jsx?$/,
-                exclude: /(node_modules|bower_components)/,
-                loader: 'babel-loader', // 'babel-loader' is also a legal name to reference
-                query: {
-                    presets: ['es2015', 'react', 'stage-0']
-                }
-            }
-        ]
+                test: /\.scss$/,
+                include: [
+                    path.resolve(__dirname, 'css'),
+                ],
+                loader: sassLoader
+            }],
+    },
+    resolve: {
+        alias: {
+            'react': path.join(__dirname, 'node_modules', 'react'),
+        },
+        extensions: ['', '.js', '.jsx', '.scss', '.css'],
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new uglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
-        })
-    ]
-}
+        new webpack.NoErrorsPlugin(),
+        new webpack.HotModuleReplacementPlugin()
+    ],
+};
